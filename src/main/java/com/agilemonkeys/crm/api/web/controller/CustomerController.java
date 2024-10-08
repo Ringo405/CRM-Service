@@ -1,12 +1,14 @@
 package com.agilemonkeys.crm.api.web.controller;
 
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQuery;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomersQueryResponse;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -19,13 +21,14 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<CustomersQueryResponse> getAllCustomers() {
+        return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+    public ResponseEntity<CustomerQueryResponse> getCustomerById(@PathVariable Long id) {
+        CustomerQuery customerQuery = CustomerQuery.builder().id(id).build();
+        return ResponseEntity.ok(customerService.getCustomerById(customerQuery));
     }
 
     @PostMapping

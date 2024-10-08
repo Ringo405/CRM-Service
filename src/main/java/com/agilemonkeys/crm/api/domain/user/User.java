@@ -25,7 +25,6 @@ public class User extends AggregateRoot<UserId> {
 
     public void initialize() {
         this.createdAt = LocalDateTime.now();
-        //this.updatedAt = LocalDateTime.now();
     }
 
     public void validate() {

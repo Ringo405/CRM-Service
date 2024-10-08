@@ -1,5 +1,6 @@
 package com.agilemonkeys.crm.api.application.mapper;
 
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 import com.agilemonkeys.crm.api.domain.valueobject.*;
 import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
@@ -24,7 +25,6 @@ public class CustomerMapper {
         return entity;
     }
 
-    // Mapea CustomerEntity a Customer
     public Customer toDomain(CustomerEntity entity) {
         return Customer.builder()
                 .id(new CustomerId(entity.getId()))
@@ -44,4 +44,16 @@ public class CustomerMapper {
                 .collect(Collectors.toList());
     }
 
+    public CustomerQueryResponse toQueryResponse(Customer customer) {
+        return CustomerQueryResponse.builder()
+                .id(customer.getId().getValue())
+                .name(customer.getName().getValue())
+                .surname(customer.getSurname().getValue())
+                .photoUrl(customer.getPhotoUrl().getValue())
+                .createdBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getValue() : null)
+                .lastModifiedBy(customer.getLastModifiedBy() != null ? customer.getLastModifiedBy().getValue() : null)
+                .createdAt(customer.getCreatedAt())
+                .updatedAt(customer.getUpdatedAt())
+                .build();
+    }
 }

@@ -21,4 +21,45 @@ public class Customer extends AggregateRoot<CustomerId> {
     private UserId lastModifiedBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void validate() {
+        if (name == null || name.getValue() == null || name.getValue().isEmpty()) {
+            throw new IllegalArgumentException("Name is required.");
+        }
+        if (name.getValue().length() > 100) {
+            throw new IllegalArgumentException("Name cannot exceed 100 characters.");
+        }
+
+        if (surname == null || surname.getValue() == null || surname.getValue().isEmpty()) {
+            throw new IllegalArgumentException("Surname is required.");
+        }
+        if (surname.getValue().length() > 100) {
+            throw new IllegalArgumentException("Surname cannot exceed 100 characters.");
+        }
+
+        if (photoUrl == null || photoUrl.getValue() == null || photoUrl.getValue().isEmpty()) {
+            throw new IllegalArgumentException("Photo URL is required.");
+        }
+        if (!isValidUrl(photoUrl.getValue())) {
+            throw new IllegalArgumentException("Photo URL is not valid.");
+        }
+
+        if (createdBy == null) {
+            throw new IllegalArgumentException("User who created the customer is required.");
+        }
+
+        if (createdAt == null) {
+            throw new IllegalArgumentException("Creation date is required.");
+        }
+    }
+
+    // Método para validar URL
+    private boolean isValidUrl(String url) {
+        String regex = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$";
+        return url.matches(regex);
+    }
+
+    public void initialize() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

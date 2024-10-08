@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserQueryResponse> getUserById(@PathVariable Long id) {
         UserQuery userQuery = UserQuery.builder().id(id).build();
-       return ResponseEntity.ok(userService.getUserById(userQuery));
+        return ResponseEntity.ok(userService.getUserById(userQuery));
     }
 
     @PostMapping

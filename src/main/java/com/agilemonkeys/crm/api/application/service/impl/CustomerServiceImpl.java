@@ -1,5 +1,8 @@
 package com.agilemonkeys.crm.api.application.service.impl;
 
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQuery;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomersQueryResponse;
 import com.agilemonkeys.crm.api.application.mapper.CustomerMapper;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
@@ -9,6 +12,7 @@ import com.agilemonkeys.crm.api.infrastructure.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -22,16 +26,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
+    public CustomersQueryResponse getAllCustomers() {
         List<CustomerEntity> customerEntities = customerRepository.findAll();
-        return customerMapper.toDomainList(customerEntities);
+        List<CustomerQueryResponse> customerResponses = customerEntities.stream()
+                .map(customerMapper::toDomain)
+                .map(customerMapper::toQueryResponse)
+                .collect(Collectors.toList());
+
+        return new CustomersQueryResponse(customerResponses);
     }
 
     @Override
-    public Customer getCustomerById(Long id) {
-        CustomerEntity entity = customerRepository.findById(id)
+    public CustomerQueryResponse getCustomerById(CustomerQuery customerQuery) {
+        CustomerEntity entity = customerRepository.findById(customerQuery.getId())
                 .orElseThrow(() -> new NotFoundException("Customer not found"));
-        return customerMapper.toDomain(entity);
+        Customer savedCustomer = customerMapper.toDomain(entity);
+        return customerMapper.toQueryResponse(savedCustomer);
     }
 
     @Override
@@ -40,6 +50,22 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerEntity savedEntity = customerRepository.save(customerEntity);
         return customerMapper.toDomain(savedEntity);
     }
+
+   /* public CreateCustomerResponse createCustomer(CreateCustomerCommand command) {
+        Customer customer = Customer.builder()
+                .name(new Name(command.getName()))
+                .surname(new Surname(command.getSurname()))
+                .photoUrl(new PhotoUrl(command.getPhotoUrl()))
+                .build();
+
+        customer.initialize(command.getCreatedBy()); // Inicializa con el creador
+        customer.validate(); // Realiza validaciones
+
+        CustomerEntity customerEntity = customerMapper.toEntity(customer);
+        CustomerEntity savedEntity = customerRepository.save(customerEntity);
+
+        return customerMapper.toResponse(savedEntity);
+    }*/
 
     @Override
     public Customer updateCustomer(Long id, Customer customerDetails) {

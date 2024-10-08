@@ -1,13 +1,15 @@
 package com.agilemonkeys.crm.api.application.service;
 
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQuery;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
+import com.agilemonkeys.crm.api.application.dto.customer.query.CustomersQueryResponse;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 
-import java.util.List;
 
 public interface CustomerService {
-    List<Customer> getAllCustomers();
+    CustomersQueryResponse getAllCustomers();
 
-    Customer getCustomerById(Long id);
+    CustomerQueryResponse getCustomerById(CustomerQuery customerQuery);
 
     Customer createCustomer(Customer customer);
 
