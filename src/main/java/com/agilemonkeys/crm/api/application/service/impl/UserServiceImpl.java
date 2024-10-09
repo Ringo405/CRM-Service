@@ -15,7 +15,6 @@ import com.agilemonkeys.crm.api.infrastructure.repository.UserRepository;
 import com.agilemonkeys.crm.api.application.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UsersQueryResponse getAllUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
-
         List<UserQueryResponse> userResponses = userEntities.stream()
                 .map(userMapper::toDomain)
                 .map(userMapper::toQueryResponse)
@@ -77,7 +75,8 @@ public class UserServiceImpl implements UserService {
         if (command.getRole() != null) {
             existingEntity.setRole(command.getRole().getDescription());
         }
-        existingEntity.setUpdatedAt(LocalDateTime.now());
+
+        //existingEntity.setUpdatedAt(LocalDateTime.now());
         //existingEntity.setUpdatedBy(command.getUpdatedBy()); lo ha de coger del user logeado
 
         UserEntity savedEntity = userRepository.save(existingEntity);

@@ -44,16 +44,15 @@ public class Customer extends AggregateRoot<CustomerId> {
             throw new IllegalArgumentException("Photo URL is not valid.");
         }
 
-        if (createdBy == null) {
+        /*if (createdBy == null) {
             throw new IllegalArgumentException("User who created the customer is required.");
         }
 
         if (createdAt == null) {
             throw new IllegalArgumentException("Creation date is required.");
-        }
+        }*/
     }
 
-    // Método para validar URL
     private boolean isValidUrl(String url) {
         String regex = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$";
         return url.matches(regex);

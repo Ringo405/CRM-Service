@@ -35,4 +35,14 @@ public class UserEntity {
 
     /*@Column(name = "last_modified_by")
     private Long lastModifiedBy;*/  //lo ha de coger del user logeado
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

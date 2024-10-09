@@ -1,11 +1,13 @@
 package com.agilemonkeys.crm.api.web.controller;
 
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerCommand;
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerResponse;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQuery;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomersQueryResponse;
-import com.agilemonkeys.crm.api.domain.customer.Customer;
+import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerCommand;
+import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerResponse;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +34,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(customer));
+    public ResponseEntity<CreateCustomerResponse> createCustomer(@RequestBody CreateCustomerCommand command) {
+        return ResponseEntity.ok(customerService.createCustomer(command));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
-        return ResponseEntity.ok(customerService.updateCustomer(id, customerDetails));
+    public ResponseEntity<UpdateCustomerResponse> updateCustomer(@PathVariable Long id, @RequestBody UpdateCustomerCommand command) {
+        command.setId(id);
+        return ResponseEntity.ok(customerService.updateCustomer(command));
     }
 
     @DeleteMapping("/{id}")

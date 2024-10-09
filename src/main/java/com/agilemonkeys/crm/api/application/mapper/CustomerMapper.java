@@ -1,6 +1,9 @@
 package com.agilemonkeys.crm.api.application.mapper;
 
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerCommand;
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerResponse;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
+import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerResponse;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 import com.agilemonkeys.crm.api.domain.valueobject.*;
 import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
@@ -46,6 +49,40 @@ public class CustomerMapper {
 
     public CustomerQueryResponse toQueryResponse(Customer customer) {
         return CustomerQueryResponse.builder()
+                .id(customer.getId().getValue())
+                .name(customer.getName().getValue())
+                .surname(customer.getSurname().getValue())
+                .photoUrl(customer.getPhotoUrl().getValue())
+                .createdBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getValue() : null)
+                .lastModifiedBy(customer.getLastModifiedBy() != null ? customer.getLastModifiedBy().getValue() : null)
+                .createdAt(customer.getCreatedAt())
+                .updatedAt(customer.getUpdatedAt())
+                .build();
+    }
+
+    public Customer toDomain(CreateCustomerCommand command) {
+        return Customer.builder()
+                .name(new Name(command.getName()))
+                .surname(new Surname(command.getSurname()))
+                .photoUrl(new PhotoUrl(command.getPhotoUrl()))
+                .build();
+    }
+
+    public CreateCustomerResponse toCreateResponse(Customer customer) {
+        return CreateCustomerResponse.builder()
+                .id(customer.getId().getValue())
+                .name(customer.getName().getValue())
+                .surname(customer.getSurname().getValue())
+                .photoUrl(customer.getPhotoUrl().getValue())
+                .createdBy(customer.getCreatedBy() != null ? customer.getCreatedBy().getValue() : null)
+                .lastModifiedBy(customer.getLastModifiedBy() != null ? customer.getLastModifiedBy().getValue() : null)
+                .createdAt(customer.getCreatedAt())
+                .updatedAt(customer.getUpdatedAt())
+                .build();
+    }
+
+    public UpdateCustomerResponse toUpdateResponse(Customer customer) {
+        return UpdateCustomerResponse.builder()
                 .id(customer.getId().getValue())
                 .name(customer.getName().getValue())
                 .surname(customer.getSurname().getValue())

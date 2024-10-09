@@ -1,8 +1,12 @@
 package com.agilemonkeys.crm.api.application.service.impl;
 
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerCommand;
+import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerResponse;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQuery;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.customer.query.CustomersQueryResponse;
+import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerCommand;
+import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerResponse;
 import com.agilemonkeys.crm.api.application.mapper.CustomerMapper;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
@@ -45,39 +49,42 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer createCustomer(Customer customer) {
+    public CreateCustomerResponse createCustomer(CreateCustomerCommand command) {
+        Customer customer = customerMapper.toDomain(command);
+
+        customer.initialize();
+        customer.validate();
+
         CustomerEntity customerEntity = customerMapper.toEntity(customer);
         CustomerEntity savedEntity = customerRepository.save(customerEntity);
-        return customerMapper.toDomain(savedEntity);
+        return customerMapper.toCreateResponse(customerMapper.toDomain(savedEntity));
     }
 
-   /* public CreateCustomerResponse createCustomer(CreateCustomerCommand command) {
-        Customer customer = Customer.builder()
-                .name(new Name(command.getName()))
-                .surname(new Surname(command.getSurname()))
-                .photoUrl(new PhotoUrl(command.getPhotoUrl()))
-                .build();
-
-        customer.initialize(command.getCreatedBy()); // Inicializa con el creador
-        customer.validate(); // Realiza validaciones
-
-        CustomerEntity customerEntity = customerMapper.toEntity(customer);
-        CustomerEntity savedEntity = customerRepository.save(customerEntity);
-
-        return customerMapper.toResponse(savedEntity);
-    }*/
-
     @Override
-    public Customer updateCustomer(Long id, Customer customerDetails) {
-        CustomerEntity customerEntity = customerRepository.findById(id)
+    public UpdateCustomerResponse updateCustomer(UpdateCustomerCommand command) {
+        CustomerEntity existingEntity = customerRepository.findById(command.getId())
                 .orElseThrow(() -> new NotFoundException("Customer not found"));
 
-        customerEntity.setName(customerDetails.getName().getValue());
-        customerEntity.setSurname(customerDetails.getSurname().getValue());
-        customerEntity.setPhotoUrl(customerDetails.getPhotoUrl().getValue());
+        if (command.getName() != null && !command.getName().isEmpty()) {
+            existingEntity.setName(command.getName());
+        }
 
-        CustomerEntity updatedEntity = customerRepository.save(customerEntity);
-        return customerMapper.toDomain(updatedEntity);
+        if (command.getSurname() != null && !command.getSurname().isEmpty()) {
+            existingEntity.setSurname(command.getSurname());
+        }
+
+        if (command.getPhotoUrl() != null && !command.getPhotoUrl().isEmpty()) {
+            existingEntity.setPhotoUrl(command.getPhotoUrl());
+        }
+
+        //existingEntity.setUpdatedAt(LocalDateTime.now());
+
+        //Long loggedInUserId = getCurrentLoggedInUserId();
+        //existingEntity.setLastModifiedBy(loggedInUserId);
+
+        CustomerEntity savedEntity = customerRepository.save(existingEntity);
+        Customer savedCustomerDomain = customerMapper.toDomain(savedEntity);
+        return customerMapper.toUpdateResponse(savedCustomerDomain);
     }
 
     @Override
@@ -87,4 +94,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerRepository.deleteById(id);
     }
+
+   /* private Long getCurrentLoggedInUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            return userDetails.getId();
+        }
+        throw new IllegalStateException("User is not authenticated");
+    }*/
 }
