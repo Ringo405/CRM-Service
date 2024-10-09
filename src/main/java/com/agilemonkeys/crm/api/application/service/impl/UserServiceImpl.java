@@ -13,6 +13,7 @@ import com.agilemonkeys.crm.api.infrastructure.exception.NotFoundException;
 import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
 import com.agilemonkeys.crm.api.infrastructure.repository.UserRepository;
 import com.agilemonkeys.crm.api.application.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +24,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -57,6 +60,8 @@ public class UserServiceImpl implements UserService {
         user.validate();
 
         UserEntity userEntity = userMapper.toEntity(user);
+        String encodedPassword = passwordEncoder.encode(userEntity.getPassword());
+        userEntity.setPassword(encodedPassword);
         UserEntity savedEntity = userRepository.save(userEntity);
         return userMapper.toCreateResponse(userMapper.toDomain(savedEntity));
     }
@@ -70,7 +75,8 @@ public class UserServiceImpl implements UserService {
             existingEntity.setUsername(command.getUsername());
         }
         if (command.getPassword() != null && !command.getPassword().isEmpty()) {
-            existingEntity.setPassword(command.getPassword());
+            String encodedPassword = passwordEncoder.encode(command.getPassword());
+            existingEntity.setPassword(encodedPassword);
         }
         if (command.getRole() != null) {
             existingEntity.setRole(command.getRole().getDescription());

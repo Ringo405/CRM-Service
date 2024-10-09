@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(userQuery));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserCommand command) {
         return ResponseEntity.ok(userService.createUser(command));
     }
