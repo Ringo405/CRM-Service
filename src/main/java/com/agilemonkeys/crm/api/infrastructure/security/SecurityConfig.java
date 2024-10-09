@@ -30,10 +30,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/users/create").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated() // Protege todos los demás endpoints
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT antes del filtro de autenticación estándar
 
         return http.build();
     }

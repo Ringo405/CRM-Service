@@ -1,10 +1,10 @@
 package com.agilemonkeys.crm.api.infrastructure.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final String SECRET_KEY = "mySuperSecretKey12345!"; // Cambia esto por una clave secreta más segura
-    private final long EXPIRATION_TIME = 86400000; // 1 día en milisegundos
+    private final long EXPIRATION_TIME = 60000; // 1 día en milisegundos
 
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
@@ -26,13 +26,14 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date(now))
                 .setExpiration(expiryDate)
-                .signWith(secretKey) // Usa la clave segura aquí
+                .signWith(secretKey, SignatureAlgorithm.HS256) // Usa HS256
                 .compact();
     }
 
     public Claims extractClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -45,8 +46,9 @@ public class JwtUtil {
         return extractClaims(token).getExpiration().before(new Date());
     }
 
-    public boolean validateToken(String token, String username) {
+    // Ahora valida el token usando el objeto UserDetails
+    public boolean validateToken(String token, UserDetails userDetails) {
         String extractedUsername = extractUsername(token);
-        return extractedUsername.equals(username) && !isTokenExpired(token);
+        return extractedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 }
