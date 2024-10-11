@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
             existingEntity.setPassword(encodedPassword);
         }
         if (command.getRole() != null) {
-            existingEntity.setRole(command.getRole().getDescription());
+            existingEntity.setRole(String.valueOf(command.getRole()));
         }
 
         //existingEntity.setUpdatedAt(LocalDateTime.now());

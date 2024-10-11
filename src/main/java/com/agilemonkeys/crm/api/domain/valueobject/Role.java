@@ -4,21 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-    ADMIN("Administrator"),
-    USER("User");
+    ADMIN,
+    USER;
 
-    private final String description;
-
-    Role(String description) {
-        this.description = description;
-    }
-
-    public static Role fromDescription(String description) {
-        for (Role role : Role.values()) {
-            if (role.getDescription().equalsIgnoreCase(description)) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("No Role with description " + description + " found");
+    public static Role fromString(String role) {
+        return Role.valueOf(role.toUpperCase());
     }
 }

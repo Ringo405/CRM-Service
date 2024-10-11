@@ -24,7 +24,7 @@ public class UserMapper {
         entity.setId(user.getId() != null ? user.getId().getValue() : null);
         entity.setUsername(user.getUsername().getValue());
         entity.setPassword(user.getPassword().getValue());
-        entity.setRole(user.getRole().getDescription());
+        entity.setRole(user.getRole().name());
         entity.setCreatedAt(user.getCreatedAt());
         entity.setUpdatedAt(user.getUpdatedAt());
 
@@ -36,7 +36,7 @@ public class UserMapper {
                 .id(new UserId(entity.getId()))
                 .username(new Username(entity.getUsername()))
                 .password(new Password(entity.getPassword()))
-                .role(Role.fromDescription(entity.getRole()))
+                .role(Role.fromString(entity.getRole()))
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

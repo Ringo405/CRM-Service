@@ -55,12 +55,6 @@ public class User extends AggregateRoot<UserId> {
         if (!isPasswordComplex(password.getValue())) {
             throw new IllegalArgumentException("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
         }
-
-        try {
-            Role.fromDescription(role.getDescription());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Role is not valid: " + e.getMessage());
-        }
     }
 
     private boolean isPasswordComplex(String password) {

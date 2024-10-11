@@ -10,6 +10,7 @@ import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserResponse;
 import com.agilemonkeys.crm.api.domain.user.User;
 import com.agilemonkeys.crm.api.application.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,34 +24,40 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UsersQueryResponse> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<UserQueryResponse> getUserById(@PathVariable Long id) {
         UserQuery userQuery = UserQuery.builder().id(id).build();
         return ResponseEntity.ok(userService.getUserById(userQuery));
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserCommand command) {
         return ResponseEntity.ok(userService.createUser(command));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserCommand command) {
         command.setId(id);
         return ResponseEntity.ok(userService.updateUser(command));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/role")
+    @PreAuthorize("hasRole('RoleADMIN')")
     public ResponseEntity<User> updateUserRole(@PathVariable Long id, @RequestParam String role) {
         /*if (!"ROLE_ADMIN".equals(role) && !"ROLE_USER".equals(role)) {
             return ResponseEntity.badRequest().body(null);
