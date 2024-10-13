@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.agilemonkeys.crm.api.infrastructure.exception.ErrorMessages.USER_NOT_FOUND;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -24,10 +26,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        // Asegúrate de añadir el prefijo "ROLE_" a los roles
         authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole()));
 
         return new org.springframework.security.core.userdetails.User(

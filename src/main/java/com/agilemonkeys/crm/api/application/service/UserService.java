@@ -7,7 +7,7 @@ import com.agilemonkeys.crm.api.application.dto.user.query.UserQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.user.query.UsersQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserCommand;
 import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserResponse;
-import com.agilemonkeys.crm.api.domain.user.User;
+import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserRoleCommand;
 
 
 public interface UserService {
@@ -21,5 +21,5 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    User updateUserRole(Long id, String role);
+    UpdateUserResponse updateUserRole(UpdateUserRoleCommand command);
 }

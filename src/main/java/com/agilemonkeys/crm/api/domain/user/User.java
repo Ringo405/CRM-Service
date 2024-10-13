@@ -20,6 +20,8 @@ public class User extends AggregateRoot<UserId> {
     private Username username;
     private Password password;
     private Role role;
+    private Long createdBy;
+    private Long lastModifiedBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

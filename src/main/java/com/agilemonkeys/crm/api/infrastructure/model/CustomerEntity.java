@@ -1,5 +1,6 @@
 package com.agilemonkeys.crm.api.infrastructure.model;
 
+import com.agilemonkeys.crm.api.infrastructure.security.SecurityUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -43,10 +44,12 @@ public class CustomerEntity {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        //this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+        //this.lastModifiedBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 }

@@ -18,6 +18,8 @@ public class UserResponse {
     private Long id;
     private String username;
     private Role role;
+    private Long createdBy;
+    private Long lastModifiedBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -25,6 +25,8 @@ public class UserMapper {
         entity.setUsername(user.getUsername().getValue());
         entity.setPassword(user.getPassword().getValue());
         entity.setRole(user.getRole().name());
+        entity.setCreatedBy(user.getCreatedBy() != null ? user.getCreatedBy() : null);
+        entity.setLastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null);
         entity.setCreatedAt(user.getCreatedAt());
         entity.setUpdatedAt(user.getUpdatedAt());
 
@@ -37,6 +39,8 @@ public class UserMapper {
                 .username(new Username(entity.getUsername()))
                 .password(new Password(entity.getPassword()))
                 .role(Role.fromString(entity.getRole()))
+                .createdBy(entity.getCreatedBy() != null ? entity.getCreatedBy() : null)
+                .lastModifiedBy(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy() : null)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();
@@ -55,6 +59,8 @@ public class UserMapper {
                 .id(user.getId().getValue())
                 .username(user.getUsername().getValue())
                 .role(user.getRole())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy() : null)
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -65,6 +71,8 @@ public class UserMapper {
                 .id(user.getId().getValue())
                 .username(user.getUsername().getValue())
                 .role(user.getRole())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy() : null)
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -75,6 +83,8 @@ public class UserMapper {
                 .id(user.getId().getValue())
                 .username(user.getUsername().getValue())
                 .role(user.getRole())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy() : null)
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -85,6 +95,8 @@ public class UserMapper {
                 .id(user.getId().getValue())
                 .username(user.getUsername().getValue())
                 .role(user.getRole())
+                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy() : null)
+                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

@@ -7,17 +7,22 @@ import com.agilemonkeys.crm.api.application.dto.user.query.UserQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.user.query.UsersQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserCommand;
 import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserResponse;
+import com.agilemonkeys.crm.api.application.dto.user.update.UpdateUserRoleCommand;
 import com.agilemonkeys.crm.api.application.mapper.UserMapper;
 import com.agilemonkeys.crm.api.domain.user.User;
+import com.agilemonkeys.crm.api.domain.valueobject.Role;
 import com.agilemonkeys.crm.api.infrastructure.exception.NotFoundException;
 import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
 import com.agilemonkeys.crm.api.infrastructure.repository.UserRepository;
 import com.agilemonkeys.crm.api.application.service.UserService;
+import com.agilemonkeys.crm.api.infrastructure.security.SecurityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.agilemonkeys.crm.api.infrastructure.exception.ErrorMessages.USER_NOT_FOUND;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,11 +30,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final SecurityUtils securityUtils;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, SecurityUtils securityUtils) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -46,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserQueryResponse getUserById(UserQuery userQuery) {
         UserEntity userEntity = userRepository.findById(userQuery.getId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         User savedUserDomain = userMapper.toDomain(userEntity);
         return userMapper.toQueryResponse(savedUserDomain);
@@ -59,6 +66,13 @@ public class UserServiceImpl implements UserService {
         user.initialize();
         user.validate();
 
+        if (userRepository.findByUsername(user.getUsername().getValue()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        Long userId = securityUtils.getCurrentLoggedInUserId();
+        user.setCreatedBy(userId);
+
         UserEntity userEntity = userMapper.toEntity(user);
         String encodedPassword = passwordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodedPassword);
@@ -69,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UpdateUserResponse updateUser(UpdateUserCommand command) {
         UserEntity existingEntity = userRepository.findById(command.getId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         if (command.getUsername() != null) {
             existingEntity.setUsername(command.getUsername());
@@ -82,8 +96,8 @@ public class UserServiceImpl implements UserService {
             existingEntity.setRole(String.valueOf(command.getRole()));
         }
 
-        //existingEntity.setUpdatedAt(LocalDateTime.now());
-        //existingEntity.setUpdatedBy(command.getUpdatedBy()); lo ha de coger del user logeado
+        Long userId = securityUtils.getCurrentLoggedInUserId();
+        existingEntity.setLastModifiedBy(userId);
 
         UserEntity savedEntity = userRepository.save(existingEntity);
         User savedUserDomain = userMapper.toDomain(savedEntity);
@@ -93,18 +107,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException(USER_NOT_FOUND);
         }
         userRepository.deleteById(id);
     }
 
     @Override
-    public User updateUserRole(Long id, String role) {
-        UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+    public UpdateUserResponse updateUserRole(UpdateUserRoleCommand command) {
+        UserEntity userEntity = userRepository.findById(command.getId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        userEntity.setRole(role);
+        Role role = Role.valueOf(command.getRole().name());
+        userEntity.setRole(role.name());
+
+        Long userId = securityUtils.getCurrentLoggedInUserId();
+        userEntity.setLastModifiedBy(userId);
+
         UserEntity updatedEntity = userRepository.save(userEntity);
-        return userMapper.toDomain(updatedEntity);
+        User savedUserDomain = userMapper.toDomain(updatedEntity);
+
+        return userMapper.toUpdateResponse(savedUserDomain);
     }
 }

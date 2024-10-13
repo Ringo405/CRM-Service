@@ -27,22 +27,27 @@ public class UserEntity {
 
     private String role;
 
+    @Column(name = "created_by")
+    private Long createdBy;
+
+    @Column(name = "last_modified_by")
+    private Long lastModifiedBy;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    /*@Column(name = "last_modified_by")
-    private Long lastModifiedBy;*/  //lo ha de coger del user logeado
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        //this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+        //this.lastModifiedBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 }
