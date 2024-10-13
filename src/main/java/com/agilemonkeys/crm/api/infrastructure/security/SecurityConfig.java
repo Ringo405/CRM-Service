@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/login").permitAll()
-                        .anyRequest().authenticated() // Protege todos los demás endpoints
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Añade el filtro JWT antes del filtro de autenticación estándar
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -44,11 +44,10 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
-        // Configura el usuario de detalles y el codificador de contraseñas
         authenticationManagerBuilder.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
 
-        return authenticationManagerBuilder.build(); // Construye el AuthenticationManager
+        return authenticationManagerBuilder.build();
     }
 
     @Bean

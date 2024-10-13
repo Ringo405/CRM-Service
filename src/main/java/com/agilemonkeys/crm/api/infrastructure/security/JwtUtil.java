@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final long expirationTime = 180000;  //60000
+    private final long expirationTime = 180000;
 
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
