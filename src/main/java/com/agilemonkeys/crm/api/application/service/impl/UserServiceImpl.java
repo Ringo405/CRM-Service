@@ -15,7 +15,6 @@ import com.agilemonkeys.crm.api.infrastructure.exception.NotFoundException;
 import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
 import com.agilemonkeys.crm.api.infrastructure.repository.UserRepository;
 import com.agilemonkeys.crm.api.application.service.UserService;
-import com.agilemonkeys.crm.api.infrastructure.security.SecurityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +29,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final SecurityUtils securityUtils;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder, SecurityUtils securityUtils) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
-        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -70,9 +67,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        Long userId = securityUtils.getCurrentLoggedInUserId();
-        user.setCreatedBy(userId);
-
         UserEntity userEntity = userMapper.toEntity(user);
         String encodedPassword = passwordEncoder.encode(userEntity.getPassword());
         userEntity.setPassword(encodedPassword);
@@ -85,8 +79,10 @@ public class UserServiceImpl implements UserService {
         UserEntity existingEntity = userRepository.findById(command.getId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
-        if (command.getUsername() != null) {
+        if (command.getUsername() != null && userRepository.findByUsername(command.getUsername()).isEmpty()) {
             existingEntity.setUsername(command.getUsername());
+        } else {
+            throw new IllegalArgumentException("Username already exists");
         }
         if (command.getPassword() != null && !command.getPassword().isEmpty()) {
             String encodedPassword = passwordEncoder.encode(command.getPassword());
@@ -95,9 +91,6 @@ public class UserServiceImpl implements UserService {
         if (command.getRole() != null) {
             existingEntity.setRole(String.valueOf(command.getRole()));
         }
-
-        Long userId = securityUtils.getCurrentLoggedInUserId();
-        existingEntity.setLastModifiedBy(userId);
 
         UserEntity savedEntity = userRepository.save(existingEntity);
         User savedUserDomain = userMapper.toDomain(savedEntity);
@@ -119,9 +112,6 @@ public class UserServiceImpl implements UserService {
 
         Role role = Role.valueOf(command.getRole().name());
         userEntity.setRole(role.name());
-
-        Long userId = securityUtils.getCurrentLoggedInUserId();
-        userEntity.setLastModifiedBy(userId);
 
         UserEntity updatedEntity = userRepository.save(userEntity);
         User savedUserDomain = userMapper.toDomain(updatedEntity);

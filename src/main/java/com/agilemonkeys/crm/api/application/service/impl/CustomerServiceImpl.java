@@ -10,11 +10,9 @@ import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerRe
 import com.agilemonkeys.crm.api.application.mapper.CustomerMapper;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
-import com.agilemonkeys.crm.api.domain.valueobject.UserId;
 import com.agilemonkeys.crm.api.infrastructure.exception.NotFoundException;
 import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
 import com.agilemonkeys.crm.api.infrastructure.repository.CustomerRepository;
-import com.agilemonkeys.crm.api.infrastructure.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +25,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final SecurityUtils securityUtils;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, SecurityUtils securityUtils) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
-        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -61,9 +57,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.initialize();
         customer.validate();
 
-        Long userId = securityUtils.getCurrentLoggedInUserId();
-        customer.setCreatedBy(new UserId(userId));
-
         CustomerEntity customerEntity = customerMapper.toEntity(customer);
         CustomerEntity savedEntity = customerRepository.save(customerEntity);
         return customerMapper.toCreateResponse(customerMapper.toDomain(savedEntity));
@@ -85,9 +78,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (command.getPhotoUrl() != null && !command.getPhotoUrl().isEmpty()) {
             existingEntity.setPhotoUrl(command.getPhotoUrl());
         }
-
-        Long userId = securityUtils.getCurrentLoggedInUserId();
-        existingEntity.setLastModifiedBy(userId);
 
         CustomerEntity savedEntity = customerRepository.save(existingEntity);
         Customer savedCustomerDomain = customerMapper.toDomain(savedEntity);

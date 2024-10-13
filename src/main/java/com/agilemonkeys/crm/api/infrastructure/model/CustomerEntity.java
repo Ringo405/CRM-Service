@@ -44,12 +44,12 @@ public class CustomerEntity {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        //this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
+        this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-        //this.lastModifiedBy = SecurityUtils.getCurrentLoggedInUserId();
+        this.lastModifiedBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 }
