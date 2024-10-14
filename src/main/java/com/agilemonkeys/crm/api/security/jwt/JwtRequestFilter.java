@@ -17,6 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.agilemonkeys.crm.api.infrastructure.exception.ErrorMessages.*;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -50,25 +52,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (ExpiredJwtException e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{ \"error\": \"El token JWT ha expirado\" }");
-                return;
+                throw new ExpiredJwtException(e.getHeader(), e.getClaims(), JWT_TOKEN_EXPIRED, e);
             } catch (MalformedJwtException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.setContentType("application/json");
-                response.getWriter().write("{ \"error\": \"El token JWT es inválido\" }");
-                return;
+                throw new IllegalArgumentException(JWT_INVALID, e);
             } catch (UnsupportedJwtException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.setContentType("application/json");
-                response.getWriter().write("{ \"error\": \"El token JWT no es soportado\" }");
-                return;
+                throw new IllegalArgumentException(JWT_UNSUPPORTED, e);
             } catch (IllegalArgumentException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.setContentType("application/json");
-                response.getWriter().write("{ \"error\": \"Token JWT no proporcionado o malformado\" }");
-                return;
+                throw new IllegalArgumentException(JWT_MISSING_OR_MALFORMED, e);
             }
         }
 

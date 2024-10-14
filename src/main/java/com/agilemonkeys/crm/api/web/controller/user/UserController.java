@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserQueryResponse> getUserById(@PathVariable Long id) {
         UserQuery userQuery = UserQuery.builder().id(id).build();
         return ResponseEntity.ok(userService.getUserById(userQuery));

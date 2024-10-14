@@ -7,6 +7,10 @@ public class ErrorMessages {
     public static final String ERROR = "Error";
     public static final String JWT_TOKEN_EXPIRED = "The JWT token has expired. Please authenticate again.";
     public static final String NOT_AUTHENTICATED = "You are not authenticated. Please provide a valid token.";
+    public static final String JWT_INVALID = "The JWT token is invalid.";
+    public static final String JWT_UNSUPPORTED = "The JWT token is unsupported.";
+    public static final String JWT_MISSING_OR_MALFORMED = "The JWT token was not provided or is malformed.";
+
 
     private ErrorMessages() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
