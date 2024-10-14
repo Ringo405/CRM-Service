@@ -17,8 +17,10 @@ services:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
     depends_on:
-      - oracle-db
-      - minio
+      oracle-db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
 
   oracle-db:
     image: gvenzl/oracle-xe
@@ -26,6 +28,11 @@ services:
       - "1522:1521"
     environment:
       ORACLE_PASSWORD: oracle
+    healthcheck:
+      test: [ "CMD", "sqlplus", "system/oracle@//oracle-db:1522/FREEPDB1", "SELECT 1 FROM DUAL;" ]
+      interval: 50s
+      timeout: 30s
+      retries: 10
 
   minio:
     image: minio/minio
@@ -37,17 +44,6 @@ services:
     command: server /data
     volumes:
       - minio_data:/data
-
-  minio-console:
-    image: minio/console
-    ports:
-      - "9001:9001"
-    environment:
-      MINIO_SERVER: http://minio:9000
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    depends_on:
-      - minio
 
 volumes:
   minio_data:
