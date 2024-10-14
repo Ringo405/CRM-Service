@@ -108,26 +108,6 @@ class CustomerServiceTest {
         verify(customerRepository, times(1)).findById(customerId);
     }
 
-  /*  @Test
-    void testCreateCustomer() {
-        CreateCustomerCommand command = new CreateCustomerCommand();
-        command.setName("Pepe");
-        command.setSurname("Perez");
-        command.setPhotoUrl("http://example.com/photo.jpg");
-
-        Customer mockCustomer = createTestCustomer();
-        when(customerMapper.toDomain(command)).thenReturn(mockCustomer);
-
-        CustomerEntity mockEntity = new CustomerEntity();
-        when(customerMapper.toEntity(mockCustomer)).thenReturn(mockEntity);
-        when(customerRepository.save(mockEntity)).thenReturn(mockEntity);
-
-        CreateCustomerResponse response = customerService.createCustomer(command);
-
-        assertNotNull(response);
-        verify(customerRepository, times(1)).save(mockEntity);
-    }*/
-
     @Test
     void testUpdateCustomer_Success() {
         Long customerId = 1L;

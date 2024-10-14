@@ -1,7 +1,5 @@
 package com.agilemonkeys.crm.api.application.service;
 
-import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserCommand;
-import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserResponse;
 import com.agilemonkeys.crm.api.application.dto.user.query.UserQuery;
 import com.agilemonkeys.crm.api.application.dto.user.query.UserQueryResponse;
 import com.agilemonkeys.crm.api.application.dto.user.query.UsersQueryResponse;
@@ -100,37 +98,6 @@ class UserServiceTest {
         assertNotNull(response);
         verify(userRepository, times(1)).findById(userId);
     }
-
- /*   @Test
-    void testCreateUser() {
-        // Given
-        CreateUserCommand command = new CreateUserCommand();
-        command.setUsername("Pepe");
-        command.setPassword("Password123@");
-        command.setRole(Role.USER);
-
-        User mockUser = createTestUser();
-        when(userMapper.toDomain(command)).thenReturn(mockUser);
-
-        UserEntity mockEntity = new UserEntity();
-        when(userMapper.toEntity(mockUser)).thenReturn(mockEntity);
-        when(userRepository.findByUsername(mockUser.getUsername().getValue())).thenReturn(Optional.empty());
-
-        String encodedPassword = "Password123@";
-        when(passwordEncoder.encode(mockEntity.getPassword())).thenReturn(encodedPassword);
-        mockEntity.setPassword(encodedPassword);
-
-        when(userRepository.save(mockEntity)).thenReturn(mockEntity);
-        when(userMapper.toCreateResponse(any(User.class))).thenReturn(new CreateUserResponse());
-
-        // When
-        CreateUserResponse response = userService.createUser(command);
-
-        // Then
-        assertNotNull(response);
-        verify(userRepository, times(1)).save(mockEntity);
-        verify(userMapper, times(1)).toCreateResponse(any(User.class));
-    }*/
 
     @Test
     void testUpdateUser() {
