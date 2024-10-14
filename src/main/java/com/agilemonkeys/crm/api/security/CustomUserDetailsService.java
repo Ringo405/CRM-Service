@@ -1,7 +1,7 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.security;
 
-import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
-import com.agilemonkeys.crm.api.infrastructure.repository.UserRepository;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.UserEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

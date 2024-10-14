@@ -6,7 +6,7 @@ import com.agilemonkeys.crm.api.application.dto.customer.query.CustomerQueryResp
 import com.agilemonkeys.crm.api.application.dto.customer.update.UpdateCustomerResponse;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 import com.agilemonkeys.crm.api.domain.valueobject.*;
-import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

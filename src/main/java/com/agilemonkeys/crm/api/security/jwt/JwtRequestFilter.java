@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

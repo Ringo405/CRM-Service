@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.api.web.controller;
+package com.agilemonkeys.crm.api.web.controller.user;
 
 import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserCommand;
 import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserResponse;

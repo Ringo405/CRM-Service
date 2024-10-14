@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.infrastructure.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;

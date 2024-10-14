@@ -1,6 +1,6 @@
-package com.agilemonkeys.crm.api.infrastructure.repository;
+package com.agilemonkeys.crm.api.infrastructure.persistance.repository;
 
-import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

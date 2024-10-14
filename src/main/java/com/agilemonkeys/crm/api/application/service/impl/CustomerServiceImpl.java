@@ -11,8 +11,8 @@ import com.agilemonkeys.crm.api.application.mapper.CustomerMapper;
 import com.agilemonkeys.crm.api.application.service.CustomerService;
 import com.agilemonkeys.crm.api.domain.customer.Customer;
 import com.agilemonkeys.crm.api.infrastructure.exception.NotFoundException;
-import com.agilemonkeys.crm.api.infrastructure.model.CustomerEntity;
-import com.agilemonkeys.crm.api.infrastructure.repository.CustomerRepository;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.CustomerEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

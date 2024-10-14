@@ -1,6 +1,6 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.security;
 
-import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

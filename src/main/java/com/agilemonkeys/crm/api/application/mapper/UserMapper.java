@@ -10,7 +10,7 @@ import com.agilemonkeys.crm.api.domain.valueobject.Password;
 import com.agilemonkeys.crm.api.domain.valueobject.Role;
 import com.agilemonkeys.crm.api.domain.valueobject.UserId;
 import com.agilemonkeys.crm.api.domain.valueobject.Username;
-import com.agilemonkeys.crm.api.infrastructure.model.UserEntity;
+import com.agilemonkeys.crm.api.infrastructure.persistance.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

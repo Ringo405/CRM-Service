@@ -1,5 +1,6 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.security;
 
+import com.agilemonkeys.crm.api.security.jwt.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

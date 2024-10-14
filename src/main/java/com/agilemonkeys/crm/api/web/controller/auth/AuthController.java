@@ -1,6 +1,8 @@
-package com.agilemonkeys.crm.api.infrastructure.security;
+package com.agilemonkeys.crm.api.web.controller.auth;
 
 import com.agilemonkeys.crm.api.application.dto.AuthRequest;
+import com.agilemonkeys.crm.api.security.CustomUserDetailsService;
+import com.agilemonkeys.crm.api.security.jwt.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

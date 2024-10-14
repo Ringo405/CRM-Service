@@ -1,6 +1,6 @@
-package com.agilemonkeys.crm.api.infrastructure.model;
+package com.agilemonkeys.crm.api.infrastructure.persistance.entity;
 
-import com.agilemonkeys.crm.api.infrastructure.security.SecurityUtils;
+import com.agilemonkeys.crm.api.security.SecurityUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -10,24 +10,23 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "app_user")
 @Getter
 @Setter
-public class CustomerEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Name is required")
-    @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
-    private String name;
+    @NotNull(message = "Username is required")
+    @Size(min = 4, max = 50, message = "Username should be between 4 and 50 characters")
+    private String username;
 
-    @NotNull(message = "Surname is required")
-    @Size(min = 2, max = 50, message = "Surname should be between 2 and 50 characters")
-    private String surname;
+    @NotNull(message = "Password is required")
+    @Size(min = 6, message = "Password should be at least 6 characters")
+    private String password;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    private String role;
 
     @Column(name = "created_by")
     private Long createdBy;

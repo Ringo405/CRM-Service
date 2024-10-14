@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.api.web.controller;
+package com.agilemonkeys.crm.api.web.controller.customer;
 
 import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerCommand;
 import com.agilemonkeys.crm.api.application.dto.customer.create.CreateCustomerResponse;
