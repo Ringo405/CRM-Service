@@ -1,6 +1,5 @@
 package com.agilemonkeys.crm.api.application.mapper;
 
-import com.agilemonkeys.crm.api.application.dto.user.UserResponse;
 import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserCommand;
 import com.agilemonkeys.crm.api.application.dto.user.create.CreateUserResponse;
 import com.agilemonkeys.crm.api.application.dto.user.query.UserQueryResponse;
@@ -12,9 +11,6 @@ import com.agilemonkeys.crm.api.domain.valueobject.UserId;
 import com.agilemonkeys.crm.api.domain.valueobject.Username;
 import com.agilemonkeys.crm.api.infrastructure.persistance.entity.UserEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class UserMapper {
@@ -43,26 +39,6 @@ public class UserMapper {
                 .lastModifiedBy(entity.getLastModifiedBy() != null ? entity.getLastModifiedBy() : null)
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
-                .build();
-    }
-
-    public List<User> toDomainList(List<UserEntity> entities) {
-        List<User> users = new ArrayList<>();
-        for (UserEntity entity : entities) {
-            users.add(toDomain(entity));
-        }
-        return users;
-    }
-
-    public UserResponse toResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId().getValue())
-                .username(user.getUsername().getValue())
-                .role(user.getRole())
-                .createdBy(user.getCreatedBy() != null ? user.getCreatedBy() : null)
-                .lastModifiedBy(user.getLastModifiedBy() != null ? user.getLastModifiedBy() : null)
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 
