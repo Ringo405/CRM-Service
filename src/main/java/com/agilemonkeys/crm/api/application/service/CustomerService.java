@@ -19,4 +19,6 @@ public interface CustomerService {
     UpdateCustomerResponse updateCustomer(UpdateCustomerCommand command);
 
     void deleteCustomer(Long id);
+
+    void updateCustomerPhotoUrl(Long customerId, String photoUrl);
 }

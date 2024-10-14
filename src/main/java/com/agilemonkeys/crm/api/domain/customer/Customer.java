@@ -43,14 +43,6 @@ public class Customer extends AggregateRoot<CustomerId> {
         if (!isValidUrl(photoUrl.getValue())) {
             throw new IllegalArgumentException("Photo URL is not valid.");
         }
-
-        /*if (createdBy == null) {
-            throw new IllegalArgumentException("User who created the customer is required.");
-        }
-
-        if (createdAt == null) {
-            throw new IllegalArgumentException("Creation date is required.");
-        }*/
     }
 
     private boolean isValidUrl(String url) {

@@ -91,4 +91,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerRepository.deleteById(id);
     }
+
+    @Override
+    public void updateCustomerPhotoUrl(Long customerId, String photoUrl) {
+        CustomerEntity customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + customerId));
+
+        customer.setPhotoUrl(photoUrl);
+        customerRepository.save(customer);
+    }
 }
