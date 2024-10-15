@@ -57,8 +57,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 throw new IllegalArgumentException(JWT_INVALID, e);
             } catch (UnsupportedJwtException e) {
                 throw new IllegalArgumentException(JWT_UNSUPPORTED, e);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(JWT_MISSING_OR_MALFORMED, e);
             }
         }
 
