@@ -40,14 +40,6 @@ public class Customer extends AggregateRoot<CustomerId> {
         if (photoUrl == null || photoUrl.getValue() == null || photoUrl.getValue().isEmpty()) {
             throw new IllegalArgumentException("Photo URL is required.");
         }
-        if (!isValidUrl(photoUrl.getValue())) {
-            throw new IllegalArgumentException("Photo URL is not valid.");
-        }
-    }
-
-    private boolean isValidUrl(String url) {
-        String regex = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$";
-        return url.matches(regex);
     }
 
     public void initialize() {
