@@ -21,9 +21,6 @@ public class ImageService {
     @Value("${minio.url}")
     private String minioUrl;
 
-    @Value("${minio.port}")
-    private Integer minioPort;
-
     @Value("${minio.bucket.name}")
     private String bucketName;
 
@@ -33,10 +30,13 @@ public class ImageService {
     @Value("${minio.access.secret}")
     private String secretKey;
 
+    @Value("${minio.port}")
+    private int minioPort;
+
     @PostConstruct
     public void init() {
         this.minioClient = MinioClient.builder()
-                .endpoint(minioUrl + ":" + minioPort)
+                .endpoint(minioUrl)
                 .credentials(accessKey, secretKey)
                 .build();
     }

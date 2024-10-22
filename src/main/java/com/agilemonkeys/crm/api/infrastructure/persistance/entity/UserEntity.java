@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 
@@ -42,8 +43,12 @@ public class UserEntity {
 
     @PrePersist
     protected void onCreate() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
+        } else {
+            this.createdBy = 0L;
+        }
         this.createdAt = LocalDateTime.now();
-        this.createdBy = SecurityUtils.getCurrentLoggedInUserId();
     }
 
     @PreUpdate

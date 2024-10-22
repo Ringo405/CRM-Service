@@ -49,20 +49,26 @@ Create a new bucket (for example, crmbucket).
 Make sure your application.yml file is correctly configured to connect to Oracle and MinIO:
 ```bash
 spring:
-datasource:
-url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
-username: system
-password: oracle
-driver-class-name: oracle.jdbc.OracleDriver
-jpa:
-hibernate:
-ddl-auto: update
-show-sql: true
+  application:
+    name: crm-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:oracle:thin:@//localhost:1522/FREEPDB1}
+    username: ${SPRING_DATASOURCE_USERNAME:system}
+    password: ${SPRING_DATASOURCE_PASSWORD:oracle}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:oracle.jdbc.OracleDriver}
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+
 minio:
-url: http://localhost:9000
-bucket-name: crmbucket
-access-key: minioadmin
-secret-key: minioadmin
+  url: ${MINIO_URL:http://127.0.0.1}
+  port: ${MINIO_PORT:9000}
+  bucket:
+    name: ${MINIO_BUCKET_NAME:crmbucket}
+  access:
+    key: ${MINIO_ACCESS_KEY:minioadmin}
+    secret: ${MINIO_SECRET_KEY:minioadmin}
 ```
 ## Docker Compose Configuration
 
@@ -77,7 +83,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//oracle-db:1522/FREEPDB1
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//oracle-db:1521/FREEPDB1
       SPRING_DATASOURCE_USERNAME: system
       SPRING_DATASOURCE_PASSWORD: oracle
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: oracle.jdbc.OracleDriver
@@ -88,15 +94,22 @@ services:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
     depends_on:
-      - oracle-db
-      - minio
+      oracle-db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
 
   oracle-db:
     image: gvenzl/oracle-xe
     ports:
       - "1522:1521"
     environment:
-      ORACLE_PASSWORD: oracle
+      ORACLE_PASSWORD: oracle 
+    healthcheck:
+      test: [ "CMD", "sqlplus", "system/oracle@//oracle-db:1521/FREEPDB1", "SELECT 1 FROM DUAL;" ]
+      interval: 50s
+      timeout: 30s
+      retries: 10
 
   minio:
     image: minio/minio
@@ -108,6 +121,11 @@ services:
     command: server /data
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   minio_data:
