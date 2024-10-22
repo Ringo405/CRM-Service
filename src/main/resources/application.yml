@@ -12,10 +12,9 @@ spring:
     show-sql: ${SPRING_JPA_SHOW_SQL:true}
 
 minio:
-  url: ${MINIO_URL:http://127.0.0.1}
-  port: ${MINIO_PORT:9000}
+  url: ${MINIO_URL:http://127.0.0.1:9000}
   bucket:
     name: ${MINIO_BUCKET_NAME:crmbucket}
   access:
-    key: ${MINIO_ACCESS_KEY:minioadmin}
-    secret: ${MINIO_SECRET_KEY:minioadmin}
+    key: ${MINIO_ROOT_USER:minioadmin}
+    secret: ${MINIO_ROOT_PASSWORD:minioadmin}

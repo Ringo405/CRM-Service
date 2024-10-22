@@ -30,9 +30,6 @@ public class ImageService {
     @Value("${minio.access.secret}")
     private String secretKey;
 
-    @Value("${minio.port}")
-    private int minioPort;
-
     @PostConstruct
     public void init() {
         this.minioClient = MinioClient.builder()
@@ -69,8 +66,6 @@ public class ImageService {
     }
 
     private String constructFileUrl(String fileName) {
-        String protocol = minioUrl.startsWith("https") ? "https" : "http";
-        String host = minioUrl.replaceFirst("^(https?://)?", "");
-        return String.format("%s://%s:%d/%s/%s", protocol, host, minioPort, bucketName, fileName);
+        return String.format("%s/%s/%s", minioUrl, bucketName, fileName);
     }
 }

@@ -36,10 +36,6 @@ public class Customer extends AggregateRoot<CustomerId> {
         if (surname.getValue().length() > 100) {
             throw new IllegalArgumentException("Surname cannot exceed 100 characters.");
         }
-
-        if (photoUrl == null || photoUrl.getValue() == null || photoUrl.getValue().isEmpty()) {
-            throw new IllegalArgumentException("Photo URL is required.");
-        }
     }
 
     public void initialize() {
